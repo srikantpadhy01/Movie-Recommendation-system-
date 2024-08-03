@@ -1,36 +1,33 @@
 # Movie-Recommendation-system-
- ##importing all the required data sets 
-import numpy as np
- import pandas as pd 
-from sklearn.metrics.pairwise import cosine_similarity
- movies=pd.read_csv("dataset.csv")## assigning the dataset to the variable 
-movies
- movies.columns
- movies.info()## checking the datatype of each applied data 
-movies["tags"]=movies["genre"]+ movies["overview"]##processing the movie tags as a new column as a combination of
- movies.head()
- new_df=movies[['id',"title","genre",'overview',"tags"]]
- new_df
- new_df=new_df.drop(columns=["genre","overview"])## keeping only the two required columns in the dataset
- new_df.head()
- from sklearn.feature_extraction.text import CountVectorizer
- cv=CountVectorizer(max_features=10000,stop_words="english") 
-cv
- vec=cv.fit_transform(new_df["tags"].values.astype("U")).toarray()
- vec
- vec.shape
- (10000, 10000)
- from sklearn.metrics.pairwise import cosine_similarity
- sim=cosine_similarity(vec)
- new_df[new_df['title']=="The Shawshank Redemption"]
- dist=sorted(list(enumerate(sim[0])),reverse=True,key=lambda vec:vec[1])
- dist
- for i in dist[0:5]:
- print(new_df.iloc[i[0]].title)
- def recommend(movies):
- index=new_df[new_df["title"]==movies].index[0]
- distance=sorted(list(enumerate(sim[index])),reverse=True,key=lambda vec:vec[1])
- for i in distance[0:5]:
- print(new_df.iloc[i[0]].title)
- recommend("Iron Man")
- 
+Data Import and Preparation:
+
+Imports necessary libraries (numpy, pandas, CountVectorizer, cosine_similarity).
+Loads a dataset (dataset.csv) into a DataFrame called movies.
+Combines the genre and overview columns into a new column tags to create a textual representation of each movie.
+Data Cleaning:
+
+Creates a new DataFrame new_df with only the relevant columns (id, title, tags), dropping the original genre and overview columns.
+Vectorization:
+
+Uses CountVectorizer to convert the tags text data into numerical vectors (features), where max_features=10000 limits the number of features and stop_words="english" removes common words.
+Transforms the tags into a term-document matrix (array of shape (10000, 10000)).
+Cosine Similarity Calculation:
+
+Computes the cosine similarity matrix for the vectors, which measures how similar each movie is to every other movie based on the tags.
+Recommendation Function:
+
+Defines a recommend function that takes a movie title as input.
+Finds the index of the specified movie, computes similarity scores with all other movies, and returns the top 5 most similar movies.
+Example Usage:
+
+Finds similar movies to "Iron Man" by calling the recommend function.
+Key Points:
+
+The system uses the content of the movies (tags) to recommend similar movies.
+Similarity is determined based on cosine similarity of the vectorized text data.
+Your project creates a content-based recommendation system using textual features from movie tags to find and suggest similar movies.
+
+
+
+
+
